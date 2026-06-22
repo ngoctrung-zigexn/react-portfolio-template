@@ -8,6 +8,7 @@ import AvatarView from "/src/components/generic/AvatarView.jsx"
 import {Tag, Tags} from "/src/components/generic/Tags.jsx"
 import ArticleItemPreviewMenu from "/src/components/articles/partials/ArticleItemPreviewMenu.jsx"
 import {useLanguage} from "/src/providers/LanguageProvider.jsx"
+import {searchProjects} from "/src/lib/search.js"
 
 /**
  * @param {ArticleDataWrapper} dataWrapper
@@ -105,14 +106,7 @@ function ArticlePortfolioItems({ dataWrapper, selectedItemCategoryId, searchQuer
     const viewport = useViewport()
 
     const categoryFiltered = dataWrapper.getOrderedItemsFilteredBy(selectedItemCategoryId)
-    const filteredItems = searchQuery
-        ? categoryFiltered.filter(item => {
-            const q = searchQuery.toLowerCase()
-            return (item.locales?.title || "").toLowerCase().includes(q)
-                || (item.locales?.text  || "").toLowerCase().includes(q)
-                || (item.locales?.tags  || []).join(" ").toLowerCase().includes(q)
-          })
-        : categoryFiltered
+    const filteredItems = searchProjects(categoryFiltered, searchQuery)
 
     const customBreakpoint = viewport.getCustomBreakpoint(constants.SWIPER_BREAKPOINTS_FOR_THREE_SLIDES)
     const itemsPerRow = customBreakpoint?.slidesPerView || 1
